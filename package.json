@@ -1,0 +1,21 @@
+{
+  "name": "automacao-fiscal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "pw:save": "playwright codegen --save-storage=./src/temp/session.json https://ziphub.com.br",
+    "pw:load": "playwright codegen --load-storage=./src/temp/session.json https://ziphub.com.br"
+  },
+  "dependencies": {
+    "playwright": "1.60.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "@types/node": "25.9.1",
+    "tsx": "4.22.3",
+    "typescript": "6.0.3"
+  }
+}
