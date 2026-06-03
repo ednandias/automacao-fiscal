@@ -5,11 +5,14 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx src/index.ts",
     "pw:save": "playwright codegen --save-storage=./src/temp/session.json https://ziphub.com.br",
-    "pw:load": "playwright codegen --load-storage=./src/temp/session.json https://ziphub.com.br"
+    "pw:load": "playwright codegen --load-storage=./src/temp/session.json https://ziphub.com.br",
+    "gen-sheets": "tsx src/functions/genSheets.ts"
   },
   "dependencies": {
+    "@clack/prompts": "1.5.0",
+    "chalk": "5.6.2",
     "playwright": "1.60.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
