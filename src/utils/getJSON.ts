@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import type { NFeDev } from "../types/index.js";
+import type { NfeDev } from "../types/index.js";
 import { xlsx } from "../services/xlsx.js";
 
 export async function getJSON(filename: string) {
@@ -11,7 +11,7 @@ export async function getJSON(filename: string) {
   const worksheet = workbook.Sheets[workbook.SheetNames[0]!];
 
   const nfes =
-    xlsx.utils.sheet_to_json<NFeDev>(worksheet!, { defval: null }) ?? [];
+    xlsx.utils.sheet_to_json<NfeDev>(worksheet!, { defval: null }) ?? [];
 
   return { nfes, workbook, worksheet, pathFile };
 }

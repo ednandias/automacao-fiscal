@@ -7,6 +7,7 @@ import { sleep } from "../utils/sleep.js";
 import { writeErrorLog } from "../utils/writeErrorLog.js";
 import { formatDate, formatDuration } from "../utils/format.js";
 import { insertOnCell } from "../utils/sheet.js";
+import { log } from "../utils/log.js";
 
 interface StartBotProps {
   filenames: string[];
@@ -30,17 +31,7 @@ export async function startBot({
   timeout = 60000,
   longTimeout = 120000,
 }: StartBotProps) {
-  //! IMPORTANTE: CONFIGURAR
-  // const FILENAME = "ml1_sac.xlsx"; //? nome do arquivo
-  // const ACCOUNT: string = "ML1"; //? apelido da conta
-  // const BATCH = 1; //? máximo de notas que vai fazer
-  // const HEADLESS = false; //? true = background, false = foreground
-  // const CELL_NFE_DEV = "B"; //? localização da coluna NFE_DEV
-  // const ONLY_ERRORS = false; //? apenas notas com erro
-  // const timeout = 60000; //? 1 minuto
-  // const longTimeout = 120000; //? 2 minutos
-
-  console.log(chalk.cyan(`🚀 Processo começou em ${formatDate(new Date())}`));
+  log("info", `🚀 Processo começou em ${formatDate(new Date())}`);
 
   const start = performance.now();
 
@@ -77,6 +68,7 @@ export async function startBot({
     const page = await context.newPage();
     page.setDefaultTimeout(timeout);
 
+    // eslint-disable-next-line no-useless-assignment
     let devolutionPage: Page | null = null;
 
     //? vai para página e espera o conteúdo carregar
@@ -217,7 +209,7 @@ export async function startBot({
             const textResult = await element.textContent();
 
             if (textResult) {
-              //? se exisitr, extrair apenas número
+              //? se existir, extrair apenas número
               const nfeDev = textResult.replace(/(\D)/gm, "").trim();
 
               insertOnCell({
@@ -305,10 +297,9 @@ export async function startBot({
 
     await page.close();
     await context.close();
-    console.log(
-      chalk.cyan(
-        `☑️ Processo finalizado em ${formatDate(new Date())} e foi concluído em ${formatDuration(performance.now() - start)}`,
-      ),
+    log(
+      "success",
+      `☑️ Processo finalizado em ${formatDate(new Date())} e foi concluído em ${formatDuration(performance.now() - start)}`,
     );
   }
 }

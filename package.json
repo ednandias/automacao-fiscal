@@ -8,17 +8,26 @@
     "dev": "tsx src/index.ts",
     "pw:save": "playwright codegen --save-storage=./src/temp/session.json https://ziphub.com.br",
     "pw:load": "playwright codegen --load-storage=./src/temp/session.json https://ziphub.com.br",
-    "gen-sheets": "tsx src/functions/genSheets.ts"
+    "gen-sheets": "tsx src/functions/genSheets.ts",
+    "get-devolutions": "tsx src/functions/getDevolutions.ts"
   },
   "dependencies": {
     "@clack/prompts": "1.5.0",
+    "axios": "1.17.0",
     "chalk": "5.6.2",
+    "humanize-duration": "3.33.2",
     "playwright": "1.60.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/humanize-duration": "3.27.4",
     "@types/node": "25.9.1",
+    "eslint": "10.4.1",
+    "globals": "17.6.0",
+    "jiti": "2.7.0",
     "tsx": "4.22.3",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.60.1"
   }
 }

@@ -3,9 +3,10 @@ import chalk from "chalk";
 import { xlsx } from "../services/xlsx.js";
 import path from "node:path";
 import fs from "node:fs/promises";
+import { useSpinner } from "../utils/useSpinner.js";
 
 async function start() {
-  console.clear();
+  const spinner = useSpinner();
 
   p.intro(chalk.bgGreen.white(" 📄 — Gerador de planilhas v0.0.1"));
 
@@ -54,7 +55,6 @@ async function start() {
       },
     );
 
-    const spinner = p.spinner();
     spinner.start("Gerando arquivos...");
 
     const FILE_PATH = path.resolve(
@@ -70,7 +70,7 @@ async function start() {
       await fs.readFile(FILE_PATH);
 
       workbook = xlsx.readFile(FILE_PATH);
-    } catch (err) {
+    } catch {
       workbook = xlsx.utils.book_new();
     }
 
