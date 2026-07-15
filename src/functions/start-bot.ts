@@ -2,9 +2,9 @@ import path from "node:path";
 import { chromium, type Page } from "playwright";
 
 import chalk from "chalk";
-import { getJSON } from "../utils/getJSON.js";
+import { getJSON } from "../utils/get-json.js";
 import { sleep } from "../utils/sleep.js";
-import { writeErrorLog } from "../utils/writeErrorLog.js";
+import { writeErrorLog } from "../utils/write-err-log.js";
 import { formatDate, formatDuration } from "../utils/format.js";
 import { insertOnCell } from "../utils/sheet.js";
 import { log } from "../utils/log.js";

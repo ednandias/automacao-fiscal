@@ -8,8 +8,8 @@
     "dev": "tsx src/index.ts",
     "pw:save": "playwright codegen --save-storage=./src/temp/session.json https://ziphub.com.br",
     "pw:load": "playwright codegen --load-storage=./src/temp/session.json https://ziphub.com.br",
-    "gen-sheets": "tsx src/functions/genSheets.ts",
-    "get-devolutions": "tsx src/functions/getDevolutions.ts"
+    "gen-sheets": "tsx src/functions/gen-sheets.ts",
+    "get-devolutions": "tsx src/functions/get-devolutions.ts"
   },
   "dependencies": {
     "@clack/prompts": "1.5.0",

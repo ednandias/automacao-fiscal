@@ -3,7 +3,7 @@ import chalk from "chalk";
 import { xlsx } from "../services/xlsx.js";
 import path from "node:path";
 import fs from "node:fs/promises";
-import { useSpinner } from "../utils/useSpinner.js";
+import { useSpinner } from "../utils/spinner.js";
 
 async function start() {
   const spinner = useSpinner();

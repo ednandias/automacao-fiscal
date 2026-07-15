@@ -2,9 +2,8 @@ import * as p from "@clack/prompts";
 import chalk from "chalk";
 import path from "node:path";
 import fs from "node:fs/promises";
-import { startBot } from "./functions/startBot.js";
-import { startTerminal } from "./functions/startTerminal.js";
-import { useSpinner } from "./utils/useSpinner.js";
+import { startTerminal } from "./functions/start-terminal.js";
+import { useSpinner } from "./utils/spinner.js";
 import { isCancel } from "axios";
 
 async function start() {
@@ -34,22 +33,6 @@ async function start() {
 
   const config = await p.group(
     {
-      mode: () =>
-        p.select({
-          message: "Qual o modo de execução?",
-          options: [
-            {
-              value: "t",
-              label: "Terminal",
-              hint: "Modo de execução 100% em background",
-            },
-            {
-              value: "b",
-              label: "Bot",
-              hint: "Modo de execução com Playwright",
-            },
-          ],
-        }),
       filenames: () =>
         p.multiselect({
           message: "Quais arquivos serão usados?",
@@ -61,6 +44,7 @@ async function start() {
           message: "Quantas notas o bot deve tentar emitir?",
           validate: (v) => (!v ? "Obrigatório" : undefined),
           placeholder: "0 para gerar todas",
+          initialValue: "0",
         }),
 
       cellNfeDev: () =>
@@ -98,56 +82,9 @@ async function start() {
     process.exit(0);
   }
 
-  let isHeadless = true;
   let onlyErrors = false;
-  let timeout = "60000";
-  let longTimeout = "120000";
 
   if (additionalInformation) {
-    if (config.mode === "b") {
-      isHeadless = (await p.select({
-        message: "Selecione o modo de execução (apenas modo bot)",
-        initialValue: true,
-        options: [
-          {
-            label: "Background",
-            value: true,
-            hint: "Executa todo o processo em segundo plano [terminal]",
-          },
-          {
-            label: "Foregound",
-            value: false,
-            hint: "Executa todo o processo visualmente [navegador]",
-          },
-        ],
-      })) as boolean;
-
-      if (isCancel(isHeadless)) {
-        p.cancel("Operation cancelled.");
-        process.exit(0);
-      }
-
-      timeout = (await p.text({
-        message: "Qual será o tempo de espera padrão?",
-        initialValue: "60000",
-      })) as string;
-
-      if (isCancel(timeout)) {
-        p.cancel("Operation cancelled.");
-        process.exit(0);
-      }
-
-      longTimeout = (await p.text({
-        message: "Qual será o tempo de espera adicional?",
-        initialValue: "120000",
-      })) as string;
-
-      if (isCancel(longTimeout)) {
-        p.cancel("Operation cancelled.");
-        process.exit(0);
-      }
-    }
-
     onlyErrors = (await p.select({
       message: "Selecione o modo de operação",
       initialValue: false,
@@ -171,26 +108,14 @@ async function start() {
     }
   }
 
-  const { mode, filenames, batch, cellNfeDev } = config;
+  const { filenames, batch, cellNfeDev } = config;
 
-  if (mode === "t") {
-    await startTerminal({
-      filenames,
-      batch: Number(batch),
-      cellNfeDev,
-      onlyErrors,
-    });
-  } else {
-    await startBot({
-      filenames,
-      batch: Number(batch),
-      isHeadless,
-      cellNfeDev,
-      onlyErrors,
-      timeout: Number(timeout),
-      longTimeout: Number(longTimeout),
-    });
-  }
+  await startTerminal({
+    filenames,
+    batch: Number(batch),
+    cellNfeDev,
+    onlyErrors,
+  });
 }
 
 start();

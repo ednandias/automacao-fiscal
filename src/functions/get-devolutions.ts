@@ -1,18 +1,17 @@
 import * as p from "@clack/prompts";
 import chalk from "chalk";
-import { getJSON } from "../utils/getJSON.js";
+import { getJSON } from "../utils/get-json.js";
 import path from "node:path";
 import fs from "node:fs/promises";
 import { log } from "../utils/log.js";
 import { api } from "../services/api.js";
-import type { Nfe } from "../types/index.js";
-import { getIdInfeDevolucao } from "../utils/getIdNfeDevolucao.js";
-import { useSpinner } from "../utils/useSpinner.js";
+import { getIdNfeDevolucao } from "../utils/get-id-nfe-devolucao.js";
+import { useSpinner } from "../utils/spinner.js";
 
 async function start() {
-  const isNfeFetching = useSpinner();
+  const note = useSpinner();
 
-  p.intro(chalk.bgGreen.white(" 📄 — Buscador de notas de devolução v0.0.1"));
+  p.intro(chalk.bgGreen.white("📄 — Buscador de notas de devolução v0.0.1"));
 
   const pathFiles = path.resolve(import.meta.dirname, "..", "assets");
 
@@ -87,33 +86,35 @@ async function start() {
       continue;
     }
 
-    isNfeFetching.start("Buscando notas...");
-
-    const response = await api.get<Nfe[]>(
-      `/nfe/lista-nfe/${account}/514066249?dataIn=2023-12-31T23:59:59.000Z&dataFn=2026-06-05T10:08:44.641Z`,
-    );
-
-    isNfeFetching.stop("Notas buscadas.");
-
     for (const nfe of nfes) {
-      const nfeFound = response.data.find((n) => String(n.numnfe) == nfe.NFE);
+      note.start("Buscando nota...");
 
-      if (nfeFound) {
-        const { id, numnfe } = await getIdInfeDevolucao(
-          String(nfeFound.id),
+      const response = await api.get(
+        `/nfe/search/514066249?account=${account}&numnfe=${nfe.NFE}`,
+      );
+
+      const nfeFound = response.data;
+
+      if (nfeFound?.id) {
+        note.stop(`✅ Nota ${nfeFound.numnfe} encontrada.`);
+
+        const nfeDev = await getIdNfeDevolucao({
+          id: String(nfeFound.id),
+          nfe: String(nfeFound.numnfe),
           account,
+        });
+
+        log(
+          "info",
+          `NOTA: NÚMERO -> ${nfeFound.numnfe} | ID -> ${nfeFound.id}`,
         );
 
-        console.log({
-          nfe: {
-            numnfe: Number(nfeFound.numnfe),
-            id: Number(nfeFound.id),
-          },
-          nfeDev: {
-            numnfe: Number(numnfe),
-            id: Number(id),
-          },
-        });
+        log(
+          "info",
+          `DEVOLUÇÃO: NÚMERO -> ${nfeDev?.numnfe} | ID -> ${nfeDev?.id}`,
+        );
+      } else {
+        note.stop(`❌ Nota ${nfeFound.numnfe} não encontrada.`);
       }
     }
   }
