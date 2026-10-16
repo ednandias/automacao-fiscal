@@ -1,22 +1,24 @@
 {
   "name": "automacao-fiscal",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Emite notas fiscais de devolução no ZipHub a partir de planilhas e grava o resultado nelas.",
+  "private": true,
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=22.20"
+  },
   "scripts": {
     "dev": "tsx src/index.ts",
-    "pw:save": "playwright codegen --save-storage=./src/temp/session.json https://ziphub.com.br",
-    "pw:load": "playwright codegen --load-storage=./src/temp/session.json https://ziphub.com.br",
-    "gen-sheets": "tsx src/functions/gen-sheets.ts",
-    "get-devolutions": "tsx src/functions/get-devolutions.ts"
+    "gen-sheets": "tsx src/scripts/genSheets.ts",
+    "typecheck": "tsc",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@clack/prompts": "1.5.0",
     "axios": "1.17.0",
     "chalk": "5.6.2",
     "humanize-duration": "3.33.2",
-    "playwright": "1.60.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {

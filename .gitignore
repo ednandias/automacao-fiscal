@@ -1,4 +1,8 @@
 node_modules
-temp
+
+# dados locais: planilhas de entrada e logs/histórico de emissões
+planilhas
 logs
-assets
+
+# sessão antiga do Playwright (pode ser apagada)
+src/temp

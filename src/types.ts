@@ -1,10 +1,4 @@
-export interface NfeDev {
-  CONTA: string;
-  NFE: string;
-  DATA: string;
-  NFE_DEV: string;
-}
-
+//? nota fiscal original, retornada por /nfe/search
 export interface Nfe {
   id: number;
   totalpedido: number;
@@ -24,15 +18,17 @@ export interface Nfe {
   pes_cnpj_cpf: string;
 }
 
-export interface NfeDevPost {
+//? retorno de /nfe/devolucao (criação do rascunho da devolução)
+export interface CreateDevolucaoResponse {
   message: string;
   idnfe_devolucao: number;
   numero_nfe: number;
 }
 
-export interface NfeStatusResponse {
+//? retorno de /nfe/status/:jobId
+export interface JobStatusResponse {
   status: string;
   jobId: string;
   message: string;
-  result: string;
+  result: unknown;
 }
