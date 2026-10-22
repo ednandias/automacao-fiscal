@@ -28,7 +28,9 @@ export function openSpreadsheet(pathFile: string): Spreadsheet {
   //? sem o cabeçalho NFE_DEV toda nota pareceria pendente e seria emitida de novo
   for (const header of ["NFE", "NFE_DEV"]) {
     if (!findColumn(worksheet, header)) {
-      throw new Error(`Cabeçalho "${header}" não encontrado na primeira linha.`);
+      throw new Error(
+        `Cabeçalho "${header}" não encontrado na primeira linha.`,
+      );
     }
   }
 
@@ -39,7 +41,9 @@ export function openSpreadsheet(pathFile: string): Spreadsheet {
     write(row, value) {
       //? sheet_add_aoa também expande o !ref; escrever a célula direto fora
       //? do intervalo faz o valor sumir ao salvar
-      xlsx.utils.sheet_add_aoa(worksheet, [[value]], { origin: `${column}${row}` });
+      xlsx.utils.sheet_add_aoa(worksheet, [[value]], {
+        origin: `${column}${row}`,
+      });
       save(workbook, pathFile);
     },
   };
@@ -53,7 +57,9 @@ export function appendNotes(pathFile: string, notes: string[]) {
 
   const sheetName = workbook.SheetNames[0] ?? DEFAULT_SHEET;
   const existing = workbook.Sheets[sheetName]
-    ? xlsx.utils.sheet_to_json<Record<string, unknown>>(workbook.Sheets[sheetName])
+    ? xlsx.utils.sheet_to_json<Record<string, unknown>>(
+        workbook.Sheets[sheetName],
+      )
     : [];
 
   const known = new Set(existing.map((r) => String(r.NFE ?? "").trim()));
@@ -85,7 +91,7 @@ export function isOpenElsewhere(pathFile: string) {
 
 //? só .xlsx, sem os arquivos de trava/temporários do Excel e LibreOffice
 export function isSpreadsheetFile(filename: string) {
-  return /\.xlsx$/i.test(filename) && !/^(~\$|\.)/.test(filename);
+  return /\.xls(x|m)$/i.test(filename) && !/^(~\$|\.)/.test(filename);
 }
 
 function firstSheet(workbook: xlsx.WorkBook) {
@@ -119,7 +125,11 @@ function findColumn(worksheet: xlsx.WorkSheet, header: string) {
   for (let c = range.s.c; c <= range.e.c; c++) {
     const cell = worksheet[xlsx.utils.encode_cell({ r: range.s.r, c })];
 
-    if (String(cell?.v ?? "").trim().toUpperCase() === header) {
+    if (
+      String(cell?.v ?? "")
+        .trim()
+        .toUpperCase() === header
+    ) {
       return xlsx.utils.encode_col(c);
     }
   }
@@ -128,8 +138,14 @@ function findColumn(worksheet: xlsx.WorkSheet, header: string) {
 //? grava num arquivo temporário e renomeia: se o processo cair no meio da
 //? escrita, a planilha original continua íntegra
 function save(workbook: xlsx.WorkBook, pathFile: string) {
-  const tmp = path.join(path.dirname(pathFile), `.${path.basename(pathFile)}.tmp`);
+  const tmp = path.join(
+    path.dirname(pathFile),
+    `.${path.basename(pathFile)}.tmp`,
+  );
 
-  fs.writeFileSync(tmp, xlsx.write(workbook, { type: "buffer", bookType: "xlsx" }));
+  fs.writeFileSync(
+    tmp,
+    xlsx.write(workbook, { type: "buffer", bookType: "xlsx" }),
+  );
   fs.renameSync(tmp, pathFile);
 }
